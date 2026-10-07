@@ -50,6 +50,8 @@ Route::delete('/guru/{nip}', [GuruController::class, 'destroy']);
 
 // Kepala Sekolah Routes
 Route::get('/kepala-sekolah', [KepalaSekolahController::class, 'index']);
+Route::get('/kepala-sekolah/pending', [KepalaSekolahController::class, 'pending'])->middleware('auth:sanctum');
+Route::post('/kepala-sekolah/approve', [KepalaSekolahController::class, 'approve'])->middleware('auth:sanctum');
 Route::get('/kepala-sekolah/{nip}', [KepalaSekolahController::class, 'show']);
 Route::post('/kepala-sekolah', [KepalaSekolahController::class, 'store']);
 Route::put('/kepala-sekolah/{nip}', [KepalaSekolahController::class, 'update']);
@@ -65,6 +67,7 @@ Route::delete('/orang-tua/{id}', [OrangTuaController::class, 'destroy']);
 // Siswa Routes
 Route::get('/siswa', [SiswaController::class, 'index']);
 Route::get('/siswa/search', [SiswaController::class, 'search']);
+Route::post('/siswa/import', [SiswaController::class, 'importExcel']);
 Route::get('/siswa/{nis}', [SiswaController::class, 'show']);
 Route::post('/siswa', [SiswaController::class, 'store']);
 Route::put('/siswa/{nis}', [SiswaController::class, 'update']);

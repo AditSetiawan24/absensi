@@ -44,7 +44,7 @@ class SiswaController extends Controller
             'gender' => 'required|in:Laki - Laki,Perempuan',
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string',
-            'id_ortu' => 'required|integer|exists:orang_tua,id_ortu',
+            'id_ortu' => 'nullable|integer|exists:orang_tua,id_ortu',
             'id_kelas' => 'required|integer|exists:kelas,id_kelas'
         ]);
 
@@ -163,5 +163,36 @@ class SiswaController extends Controller
             'message' => 'Data siswa berdasarkan kelas berhasil diambil',
             'data' => $siswa
         ], 200);
+    }
+
+    public function importExcel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx,xls,csv',
+            'id_kelas' => 'required|integer|exists:kelas,id_kelas'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $idKelas = $request->id_kelas;
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\SiswaImport($idKelas), $request->file('file'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data siswa berhasil diimport. NIS duplikat telah diabaikan.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat import: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

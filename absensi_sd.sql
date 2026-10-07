@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 07, 2026 at 09:22 AM
+-- Generation Time: Oct 07, 2026 at 05:34 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -390,7 +390,33 @@ INSERT INTO `absensi` (`id_absensi`, `nis`, `nip`, `tanggal`, `status_kehadiran`
 (380, '2028007', '20232023', '2026-10-03', 'hadir', NULL, '2026-10-03 05:22:53'),
 (381, '2028008', '20232023', '2026-10-03', 'izin', 'BAB', '2026-10-03 05:22:53'),
 (382, '2028009', '20232023', '2026-10-03', 'hadir', NULL, '2026-10-03 05:22:53'),
-(383, '2028010', '20232023', '2026-10-03', 'hadir', NULL, '2026-10-03 05:22:53');
+(383, '2028010', '20232023', '2026-10-03', 'hadir', NULL, '2026-10-03 05:22:53'),
+(384, '2027001', '123456789', '2026-10-07', 'alfa', NULL, '2026-10-07 12:21:50'),
+(385, '2027002', '123456789', '2026-10-07', 'izin', NULL, '2026-10-07 12:21:50'),
+(386, '2027003', '123456789', '2026-10-07', 'sakit', NULL, '2026-10-07 12:21:50'),
+(387, '2027004', '123456789', '2026-10-07', 'hadir', NULL, '2026-10-07 12:21:50'),
+(388, '2027005', '123456789', '2026-10-07', 'hadir', NULL, '2026-10-07 12:21:50'),
+(389, '2027006', '123456789', '2026-10-07', 'hadir', NULL, '2026-10-07 12:21:50'),
+(390, '2027007', '123456789', '2026-10-07', 'hadir', NULL, '2026-10-07 12:21:50'),
+(391, '2027008', '123456789', '2026-10-07', 'hadir', NULL, '2026-10-07 12:21:50'),
+(392, '2027009', '123456789', '2026-10-07', 'hadir', NULL, '2026-10-07 12:21:50'),
+(393, '2027010', '123456789', '2026-10-07', 'hadir', NULL, '2026-10-07 12:21:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -413,6 +439,7 @@ CREATE TABLE `guru` (
 --
 
 INSERT INTO `guru` (`nip`, `nama`, `gender`, `no_hp`, `email`, `username`, `password`) VALUES
+('123456789', 'Guru', 'Laki - Laki', '797456345', 'guru@gmail.com', 'guru', '$2y$12$vEVDCUoq6Zlpkod2xYiSEuNkMi7tePjGDc4eovDII60HjNaQZevvO'),
 ('199001012015011001', 'Pak Budi Santoso', 'Laki - Laki', '081311110001', 'budi.guru@sekolah.com', 'guru01', '$2y$12$1NGBTboGhMNEkCi0McHraeV4h7Ycu/Towxapfpj26XZIm9h1XlSK6'),
 ('199102022015012002', 'Ibu Sri Wahyuni', 'Perempuan', '081311110002', 'sri.guru@sekolah.com', 'guru02', '$2y$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa'),
 ('199203032015011003', 'Pak Joko Anwar', 'Laki - Laki', '081311110003', 'joko.guru@sekolah.com', 'guru03', '$2y$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa'),
@@ -441,7 +468,7 @@ INSERT INTO `kelas` (`id_kelas`, `kelas`, `tahun_ajar`, `nip`) VALUES
 (2, '2', '2025/2026', '199102022015012002'),
 (3, '3', '2025/2026', '199203032015011003'),
 (4, '4', '2025/2026', '199304042015012004'),
-(5, '5', '2025/2026', NULL),
+(5, '5', '2025/2026', '123456789'),
 (6, '6', '2025/2026', '20232023');
 
 -- --------------------------------------------------------
@@ -456,15 +483,39 @@ CREATE TABLE `kepala_sekolah` (
   `no_hp` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `status` enum('pending','approved') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `kepala_sekolah`
 --
 
-INSERT INTO `kepala_sekolah` (`nip`, `nama`, `no_hp`, `email`, `username`, `password`) VALUES
-('197501012000031001', 'Drs. H. Mulyono, M.Pd', '081234567890', 'mulyono@sd.com', 'kepsek', '$2y$12$5V78VSXitc3Ms5Px3fuJM.dAX.b.1Vx8yPmdmY.Mg3rUtrDttK9o6');
+INSERT INTO `kepala_sekolah` (`nip`, `nama`, `no_hp`, `email`, `username`, `password`, `status`) VALUES
+('197501012000031001', 'Drs. H. Mulyono, M.Pd', '081234567890', 'mulyono@sd.com', 'kepsek', '$2y$12$5V78VSXitc3Ms5Px3fuJM.dAX.b.1Vx8yPmdmY.Mg3rUtrDttK9o6', 'pending'),
+('3214365789', 'kepsek', '9754543643673', 'kep@gsuj.com', 'kepsek111', '$2y$12$U35dhiS9EQNWOZqLMK.ZDuqKyT386Ho9xGj0ngM/nGYvov2zhMvF6', 'approved');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `kepsek_approvals`
+--
+
+CREATE TABLE `kepsek_approvals` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nip_kepsek` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nip_guru` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `kepsek_approvals`
+--
+
+INSERT INTO `kepsek_approvals` (`id`, `nip_kepsek`, `nip_guru`, `created_at`, `updated_at`) VALUES
+(1, '197501012000031001', '123456789', '2026-10-07 16:34:26', '2026-10-07 16:34:26'),
+(2, '3214365789', '123456789', '2026-10-07 17:14:09', '2026-10-07 17:14:09');
 
 -- --------------------------------------------------------
 
@@ -495,7 +546,31 @@ CREATE TABLE `laporan` (
 
 INSERT INTO `laporan` (`id_laporan`, `id_kelas`, `nip`, `total_hadir`, `total_sakit`, `total_izin`, `total_alfa`, `periode_awal`, `periode_akhir`, `is_submitted`, `submitted_at`, `tipe`, `bulan`, `tahun`) VALUES
 (29, 1, '199001012015011001', 110, 4, 3, 2, '2026-01-01', '2026-06-30', 1, '2026-01-22 14:35:33', 'semester', NULL, NULL),
-(31, 6, '20232023', 5, 1, 3, 1, '2026-10-01', '2026-10-31', 0, NULL, 'bulanan', 10, 2026);
+(31, 6, '20232023', 5, 1, 3, 1, '2026-10-01', '2026-10-31', 0, NULL, 'bulanan', 10, 2026),
+(32, 5, '123456789', 7, 1, 1, 1, '2026-07-01', '2026-12-31', 0, NULL, 'semester', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2014_10_12_000000_create_users_table', 1),
+(2, '2014_10_12_100000_create_password_reset_tokens_table', 1),
+(3, '2019_08_19_000000_create_failed_jobs_table', 1),
+(4, '2026_10_07_232103_add_status_to_kepala_sekolah_table', 2),
+(5, '2026_10_07_232109_create_kepsek_approvals_table', 3);
 
 -- --------------------------------------------------------
 
@@ -547,7 +622,20 @@ INSERT INTO `orang_tua` (`id_ortu`, `nama`, `email`, `no_hp`, `alamat`, `usernam
 (27, 'Bapak Aliando', 'aliando.ortu@mail.com', '08120000027', 'Jl. Pisang No. 27', 'ortu27', '$2y$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa'),
 (28, 'Ibu Brisia', 'brisia.ortu@mail.com', '08120000028', 'Jl. Anggur No. 28', 'ortu28', '$2y$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa'),
 (29, 'Bapak Chicco', 'chicco.ortu@mail.com', '08120000029', 'Jl. Leci No. 29', 'ortu29', '$2y$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa'),
-(30, 'Ibu Dewi', 'dewi.ortu@mail.com', '08120000030', 'Jl. Markisa No. 30', 'ortu30', '$2y$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa');
+(30, 'Ibu Dewi', 'dewi.ortu@mail.com', '08120000030', 'Jl. Markisa No. 30', 'ortu30', '$2y$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa'),
+(31, 'te', 'dsvfds@gn.n', '097586763e4', 'dgbhvfj', 'ted', '$2y$12$qNm4qZL/.VsBLaU4wNEFm.enezWGM5K.V61hKi00ruuxQO0bjtG2.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -585,7 +673,8 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (19, 'App\\Models\\Guru', 199001012015011001, 'auth_token', '3bc5cabf9224ddc80e033be639ba139260c2a8512f22668e458ba9cc6eb42e03', '[\"guru\"]', NULL, NULL, '2026-01-19 02:53:28', '2026-01-19 02:53:28'),
 (46, 'App\\Models\\OrangTua', 1, 'auth_token', '516372cb70e1731f52318dea40bcbca17636b5fd2fb27e7a225ceccb3c63330d', '[\"orang_tua\"]', NULL, NULL, '2026-01-22 07:59:59', '2026-01-22 07:59:59'),
 (48, 'App\\Models\\Guru', 20232023, 'auth_token', 'ba4079ed12d56a11f5c3953b0e1b6845d1c625607bf673e2a4f78bdb2afeccec', '[\"guru\"]', NULL, NULL, '2026-10-03 05:21:26', '2026-10-03 05:21:26'),
-(49, 'App\\Models\\Guru', 20232023, 'auth_token', '6e973929f07fa9186015caaec799c657362def3f65eeea9d6f2618b97b4590e5', '[\"guru\"]', NULL, NULL, '2026-10-03 05:26:06', '2026-10-03 05:26:06');
+(49, 'App\\Models\\Guru', 20232023, 'auth_token', '6e973929f07fa9186015caaec799c657362def3f65eeea9d6f2618b97b4590e5', '[\"guru\"]', NULL, NULL, '2026-10-03 05:26:06', '2026-10-03 05:26:06'),
+(51, 'App\\Models\\Guru', 123456789, 'auth_token', '4946474db40c04ecb74634764b933e3afaeb321fbf333d6af312984a2565eb2e', '[\"guru\"]', NULL, NULL, '2026-10-07 16:00:33', '2026-10-07 16:00:33');
 
 -- --------------------------------------------------------
 
@@ -599,7 +688,7 @@ CREATE TABLE `siswa` (
   `gender` enum('Laki - Laki','Perempuan') NOT NULL,
   `tanggal_lahir` date NOT NULL,
   `alamat` text NOT NULL,
-  `id_ortu` int NOT NULL,
+  `id_ortu` int DEFAULT NULL,
   `id_kelas` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -667,7 +756,25 @@ INSERT INTO `siswa` (`nis`, `nama`, `gender`, `tanggal_lahir`, `alamat`, `id_ort
 ('2028007', 'Fedi Nuril', 'Laki - Laki', '2014-03-15', 'Jl. Sukajadi No. 57', 57, 6),
 ('2028008', 'Gisel Anastasia', 'Perempuan', '2014-06-12', 'Jl. Pasteur No. 58', 58, 6),
 ('2028009', 'Hamish Daud', 'Laki - Laki', '2014-09-29', 'Jl. Buah Batu No. 59', 59, 6),
-('2028010', 'Isyana Sarasvati', 'Perempuan', '2014-04-21', 'Jl. Soekarno Hatta No. 60', 60, 6);
+('2028010', 'Isyana Sarasvati', 'Perempuan', '2014-04-21', 'Jl. Soekarno Hatta No. 60', 60, 6),
+('99999', 'Contoh Nama Siswa', 'Laki - Laki', '2019-01-15', 'Jl. Contoh No. 1', 31, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -680,6 +787,13 @@ ALTER TABLE `absensi`
   ADD PRIMARY KEY (`id_absensi`),
   ADD KEY `nip` (`nip`),
   ADD KEY `nis` (`nis`);
+
+--
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
 -- Indexes for table `guru`
@@ -701,6 +815,12 @@ ALTER TABLE `kepala_sekolah`
   ADD PRIMARY KEY (`nip`);
 
 --
+-- Indexes for table `kepsek_approvals`
+--
+ALTER TABLE `kepsek_approvals`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `laporan`
 --
 ALTER TABLE `laporan`
@@ -709,10 +829,22 @@ ALTER TABLE `laporan`
   ADD KEY `nip` (`nip`);
 
 --
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `orang_tua`
 --
 ALTER TABLE `orang_tua`
   ADD PRIMARY KEY (`id_ortu`);
+
+--
+-- Indexes for table `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
 
 --
 -- Indexes for table `personal_access_tokens`
@@ -731,6 +863,13 @@ ALTER TABLE `siswa`
   ADD KEY `id_ortu` (`id_ortu`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -738,7 +877,13 @@ ALTER TABLE `siswa`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id_absensi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=384;
+  MODIFY `id_absensi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=394;
+
+--
+-- AUTO_INCREMENT for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `kelas`
@@ -747,22 +892,40 @@ ALTER TABLE `kelas`
   MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `kepsek_approvals`
+--
+ALTER TABLE `kepsek_approvals`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `laporan`
 --
 ALTER TABLE `laporan`
-  MODIFY `id_laporan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_laporan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `orang_tua`
 --
 ALTER TABLE `orang_tua`
-  MODIFY `id_ortu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_ortu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

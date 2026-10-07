@@ -9,6 +9,8 @@ import '../../services/data_service.dart';
 import '../../widgets/common_widgets.dart';
 import 'mulai_absensi_page.dart';
 import 'siswa_detail_page.dart';
+import 'kelola_siswa_page.dart';
+import 'persetujuan_kepsek_page.dart';
 
 class GuruDashboardPage extends StatefulWidget {
   const GuruDashboardPage({super.key});
@@ -127,6 +129,58 @@ class _GuruDashboardPageState extends State<GuruDashboardPage> {
                       ),
                     ),
                   ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const KelolaSiswaPage(),
+                            ),
+                          ).then((_) => _loadDashboard());
+                        },
+                        icon: const Icon(Icons.people_alt_outlined),
+                        label: const Text('Kelola Siswa', style: TextStyle(fontSize: 12)),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          backgroundColor: Colors.white,
+                          foregroundColor: AppColors.primary,
+                          side: const BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PersetujuanKepsekPage(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.verified_user_outlined),
+                        label: const Text('Setujui Kepsek', style: TextStyle(fontSize: 12)),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          backgroundColor: Colors.white,
+                          foregroundColor: AppColors.primary,
+                          side: const BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
 

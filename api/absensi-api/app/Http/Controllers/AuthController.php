@@ -77,7 +77,7 @@ class AuthController extends Controller
                     if (!array_key_exists($kodeKelas, self::KODE_KELAS)) {
                         return response()->json([
                             'success' => false,
-                            'message' => 'Kode kelas tidak valid. Hubungi admin untuk mendapatkan kode kelas yang benar.'
+                            'message' => 'Kode kelas tidak valid. Masukan kode kelas yang benar.'
                         ], 422);
                     }
                     
@@ -90,7 +90,7 @@ class AuthController extends Controller
                         $namaGuru = $guruLain ? $guruLain->nama : 'guru lain';
                         return response()->json([
                             'success' => false,
-                            'message' => "Kelas ini sudah diampu oleh {$namaGuru}. Silakan berkoordinasi dengan guru tersebut atau hubungi admin."
+                            'message' => "Kelas ini sudah diampu oleh {$namaGuru}. Silakan berkoordinasi dengan guru tersebut."
                         ], 422);
                     }
 
@@ -149,7 +149,8 @@ class AuthController extends Controller
                         'no_hp' => $request->no_hp,
                         'email' => $request->email,
                         'username' => $request->username,
-                        'password' => Hash::make($request->password)
+                        'password' => Hash::make($request->password),
+                        'status' => 'pending'
                     ]);
                     break;
 
@@ -268,6 +269,14 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Username atau password salah'
+            ], 401);
+        }
+
+        // Cek status Kepala Sekolah
+        if ($model === 'KepalaSekolah' && $user->status === 'pending') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun Anda belum disetujui. Membutuhkan minimal 4 persetujuan guru.'
             ], 401);
         }
 
@@ -623,7 +632,7 @@ class AuthController extends Controller
                 $namaGuru = $guruLain ? $guruLain->nama : 'guru lain';
                 return response()->json([
                     'success' => false,
-                    'message' => "Kelas ini sudah diampu oleh {$namaGuru}. Silakan berkoordinasi dengan guru tersebut atau hubungi admin."
+                    'message' => "Kelas ini sudah diampu oleh {$namaGuru}. Silakan berkoordinasi dengan guru tersebut."
                 ], 422);
             }
 

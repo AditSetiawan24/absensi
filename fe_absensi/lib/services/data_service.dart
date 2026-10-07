@@ -47,6 +47,47 @@ class SiswaService {
       fromJson: (data) => _parseList(data, Siswa.fromJson),
     );
   }
+
+  static Future<ApiResponse<dynamic>> importExcel(String filePath, int idKelas) async {
+    return await ApiService.postMultipart<dynamic>(
+      '/siswa/import',
+      fields: {'id_kelas': idKelas.toString()},
+      filePath: filePath,
+      fileField: 'file',
+    );
+  }
+
+  static Future<ApiResponse<dynamic>> importExcelWeb(List<int> fileBytes, String fileName, int idKelas) async {
+    return await ApiService.postMultipart<dynamic>(
+      '/siswa/import',
+      fields: {'id_kelas': idKelas.toString()},
+      fileBytes: fileBytes,
+      fileName: fileName,
+      fileField: 'file',
+    );
+  }
+
+  static Future<ApiResponse<Siswa>> create(Map<String, dynamic> data) async {
+    return await ApiService.post<Siswa>(
+      ApiConstants.siswa,
+      body: data,
+      fromJson: (data) => Siswa.fromJson(data),
+    );
+  }
+
+  static Future<ApiResponse<Siswa>> update(String nis, Map<String, dynamic> data) async {
+    return await ApiService.put<Siswa>(
+      '${ApiConstants.siswa}/$nis',
+      body: data,
+      fromJson: (data) => Siswa.fromJson(data),
+    );
+  }
+
+  static Future<ApiResponse<dynamic>> delete(String nis) async {
+    return await ApiService.delete<dynamic>(
+      '${ApiConstants.siswa}/$nis',
+    );
+  }
 }
 
 class GuruService {
@@ -87,3 +128,20 @@ class KelasService {
     );
   }
 }
+
+class KepsekService {
+  static Future<ApiResponse<List<dynamic>>> getPending() async {
+    return await ApiService.get<List<dynamic>>(
+      '/kepala-sekolah/pending',
+      fromJson: (data) => data as List<dynamic>,
+    );
+  }
+
+  static Future<ApiResponse<dynamic>> approve(String nipKepsek) async {
+    return await ApiService.post<dynamic>(
+      '/kepala-sekolah/approve',
+      body: {'nip_kepsek': nipKepsek},
+    );
+  }
+}
+

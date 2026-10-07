@@ -103,6 +103,8 @@ class ApiService {
     String endpoint, {
     required Map<String, String> fields,
     String? filePath,
+    List<int>? fileBytes,
+    String? fileName,
     String? fileField,
     T Function(dynamic)? fromJson,
   }) async {
@@ -117,8 +119,16 @@ class ApiService {
       
       request.fields.addAll(fields);
       
-      if (filePath != null && fileField != null) {
-        request.files.add(await http.MultipartFile.fromPath(fileField, filePath));
+      if (fileField != null) {
+        if (fileBytes != null && fileName != null) {
+          request.files.add(http.MultipartFile.fromBytes(
+            fileField,
+            fileBytes,
+            filename: fileName,
+          ));
+        } else if (filePath != null) {
+          request.files.add(await http.MultipartFile.fromPath(fileField, filePath));
+        }
       }
       
       final streamedResponse = await request.send();

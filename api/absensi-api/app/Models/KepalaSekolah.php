@@ -21,7 +21,8 @@ class KepalaSekolah extends Model
         'no_hp',
         'email',
         'username',
-        'password'
+        'password',
+        'status'
     ];
 
     protected $hidden = [

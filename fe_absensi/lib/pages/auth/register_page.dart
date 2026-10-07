@@ -204,11 +204,13 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         const SizedBox(height: 12),
-        Row(
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
           children: [
-            _buildRoleChip(AppConstants.roleGuru, 'Guru'),
-            const SizedBox(width: 8),
-            _buildRoleChip(AppConstants.roleOrangTua, 'Orang Tua'),
+            SizedBox(width: MediaQuery.of(context).size.width / 2.3, child: _buildRoleChip(AppConstants.roleGuru, 'Guru')),
+            SizedBox(width: MediaQuery.of(context).size.width / 2.3, child: _buildRoleChip(AppConstants.roleOrangTua, 'Orang Tua')),
+            SizedBox(width: double.infinity, child: _buildRoleChip(AppConstants.roleKepalaSekolah, 'Kepala Sekolah')),
           ],
         ),
         const SizedBox(height: 16),
@@ -320,9 +322,44 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildStep2() {
     if (_selectedRole == AppConstants.roleGuru) {
       return _buildGuruForm();
-    } else {
+    } else if (_selectedRole == AppConstants.roleOrangTua) {
       return _buildOrangTuaForm();
+    } else {
+      return _buildKepsekForm();
     }
+  }
+
+  Widget _buildKepsekForm() {
+    return Column(
+      children: [
+        CustomTextField(
+          controller: _nipController,
+          label: 'NIP',
+          hint: 'Masukkan NIP',
+          prefixIcon: Icons.badge_outlined,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'NIP tidak boleh kosong';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16),
+        CustomTextField(
+          controller: _noHpController,
+          label: 'Nomor HP',
+          hint: 'Masukkan nomor HP',
+          prefixIcon: Icons.phone_outlined,
+          keyboardType: TextInputType.phone,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Nomor HP tidak boleh kosong';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
   }
 
   Widget _buildGuruForm() {
@@ -343,7 +380,7 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
-                  'Masukkan kode sekolah dan kode kelas yang diberikan oleh admin',
+                  'Masukkan kode sekolah dan kode kelas',
                   style: TextStyle(fontSize: 12, color: Colors.blue),
                 ),
               ),
@@ -514,29 +551,27 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _buildRoleChip(String role, String label) {
     final isSelected = _selectedRole == role;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedRole = role;
-          });
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : Colors.grey[100],
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected ? AppColors.primary : Colors.grey[300]!,
-            ),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedRole = role;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : Colors.grey[300]!,
           ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isSelected ? Colors.white : AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

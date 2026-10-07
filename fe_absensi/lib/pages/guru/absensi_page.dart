@@ -143,6 +143,14 @@ class _AbsensiPageState extends State<AbsensiPage> {
       appBar: AppBar(
         title: const Text('Data Absensi'),
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              _loadKelas();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
