@@ -59,25 +59,29 @@ class _SplashScreenState extends State<SplashScreen> {
     _checkAuthStatus();
   }
 
-  Future<void> _checkAuthStatus() async {
-    await Future.delayed(const Duration(seconds: 2));
-    
-    if (!mounted) return;
+Future<void> _checkAuthStatus() async {
+  if (!mounted) return;
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await authProvider.checkLoginStatus();
+  final authProvider = Provider.of<AuthProvider>(
+    context,
+    listen: false,
+  );
 
-    if (!mounted) return;
+  await authProvider.checkLoginStatus();
 
-    if (authProvider.isAuthenticated && authProvider.user != null) {
-      _navigateToHome(authProvider.user!.role);
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LandingPage()),
-      );
-    }
+  if (!mounted) return;
+
+  if (authProvider.isAuthenticated && authProvider.user != null) {
+    _navigateToHome(authProvider.user!.role);
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LandingPage(),
+      ),
+    );
   }
+}
 
   void _navigateToHome(String role) {
     Widget homePage;
