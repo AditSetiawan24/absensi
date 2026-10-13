@@ -372,6 +372,36 @@ Pada form konfigurasi sebelum menekan deploy:
 
 ---
 
+### Langkah 4.6: (Opsional) Menggunakan Custom Subdomain (misal: `absensi.kemutugkidul.my.id`)
+Jika Anda ingin tampilan frontend diakses melalui subdomain domain Anda sendiri (bukan `.vercel.app`):
+
+1. **Di Dashboard Vercel:**
+   * Buka project Vercel Anda > masuk ke **Settings** > **Domains**.
+   * Masukkan domain yang Anda inginkan: `absensi.kemutugkidul.my.id`.
+   * Klik tombol **Add**.
+   * Vercel akan menampilkan petunjuk DNS:
+     * **Type**: `CNAME`
+     * **Name**: `absensi`
+     * **Value**: `cname.vercel-dns.com`
+
+2. **Di Dashboard Cloudflare:**
+   * Buka Cloudflare > pilih domain `kemutugkidul.my.id` > menu **DNS** > **Records**.
+   * Klik **Add record**:
+     * **Type**: `CNAME`
+     * **Name**: `absensi`
+     * **Target**: `cname.vercel-dns.com`
+     * **Proxy status**: **DNS only** (ikon awan abu-abu)  
+       *(PENTING: Harus DNS only agar sertifikat SSL Vercel terbit dengan lancar)*
+     * **TTL**: Auto
+   * Klik **Save**.
+
+3. **Verifikasi:**
+   * Kembali ke Vercel > klik tombol **Refresh**.
+   * Dalam 1–2 menit statusnya akan centang hijau (*Valid Configuration*).
+   * Frontend Anda kini resmi dapat diakses di `https://absensi.kemutugkidul.my.id`!
+
+---
+
 ## BAGIAN 5: Uji Coba Lengkap & Troubleshooting Masalah Umum
 
 ### Checklist Uji Coba Fitur Aplikasi:
