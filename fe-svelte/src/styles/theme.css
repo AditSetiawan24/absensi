@@ -1,0 +1,59 @@
+:root {
+  /* Primary */
+  --primary: #2563EB;
+  --primary-light: #60A5FA;
+  --primary-dark: #1D4ED8;
+
+  /* Secondary */
+  --secondary: #10B981;
+  --secondary-light: #34D399;
+  --secondary-dark: #059669;
+
+  /* Background */
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  
+  /* Status */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+
+  /* Attendance Status */
+  --hadir: #22C55E;
+  --izin: #F59E0B;
+  --sakit: #9CA3AF;
+  --alfa: #EF4444;
+
+  /* Text */
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-light: #9CA3AF;
+  --text-inverse: #FFFFFF;
+
+  /* Border */
+  --border: #E5E7EB;
+  --divider: #F3F4F6;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 4px 10px rgba(0,0,0,0.05);
+  --shadow-nav: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+:root.dark {
+  --bg: #121212;
+  --surface: #1E1E1E;
+  
+  --text-primary: #E5E7EB;
+  --text-secondary: #9CA3AF;
+  --text-light: #6B7280;
+  
+  --border: #3C3C3C;
+  --divider: #2C2C2C;
+  
+  --shadow-card: 0 4px 10px rgba(0,0,0,0.2);
+  --shadow-nav: 0 -2px 10px rgba(0,0,0,0.2);
+}

@@ -17,6 +17,8 @@ import '../../services/laporan_service.dart';
 import '../../services/data_service.dart';
 import '../../widgets/common_widgets.dart';
 import 'rekap_bulanan_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import '../../utils/download/download_helper.dart';
 
 class LaporanGuruPage extends StatefulWidget {
   const LaporanGuruPage({super.key});
@@ -56,7 +58,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
   Future<void> _loadKelas() async {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final nip = auth.user?.nip ?? '';
-    
+
     final response = await KelasService.getByGuru(nip);
 
     if (response.success && response.data != null) {
@@ -236,7 +238,8 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Batal Submit'),
-        content: const Text('Yakin ingin membatalkan submit laporan ini? Laporan akan kembali ke status draft.'),
+        content: const Text(
+            'Yakin ingin membatalkan submit laporan ini? Laporan akan kembali ke status draft.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -245,7 +248,8 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.warning),
-            child: const Text('Ya, Batalkan', style: TextStyle(color: Colors.white)),
+            child: const Text('Ya, Batalkan',
+                style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -390,7 +394,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
 
   Future<void> _generateAndPrintPdf(Laporan laporan) async {
     final pdf = pw.Document();
-    
+
     final total = laporan.hadir + laporan.izin + laporan.sakit + laporan.alfa;
     final persentaseHadir = total > 0 ? (laporan.hadir / total * 100) : 0.0;
 
@@ -413,14 +417,14 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                       ),
                     ),
                     pw.Text(
-                      'SD Negeri Kemutung Kidul',
+                      'SD Negeri Kemutug Kidul',
                       style: const pw.TextStyle(fontSize: 14),
                     ),
                     pw.SizedBox(height: 20),
                   ],
                 ),
               ),
-              
+
               // Info Laporan
               pw.Container(
                 padding: const pw.EdgeInsets.all(10),
@@ -441,7 +445,8 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                     pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
-                        pw.Text('Periode: ${laporan.periodeAwal} s/d ${laporan.periodeAkhir}'),
+                        pw.Text(
+                            'Periode: ${laporan.periodeAwal} s/d ${laporan.periodeAkhir}'),
                         pw.Text(laporan.semester),
                       ],
                     ),
@@ -449,31 +454,38 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                 ),
               ),
               pw.SizedBox(height: 20),
-              
+
               // Statistik
               pw.Text(
                 'Rekap Kehadiran:',
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 10),
-              
+
               pw.Table(
                 border: pw.TableBorder.all(),
                 children: [
                   pw.TableRow(
-                    decoration: const pw.BoxDecoration(color: PdfColors.grey300),
+                    decoration:
+                        const pw.BoxDecoration(color: PdfColors.grey300),
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Status', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text('Status',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Jumlah', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text('Jumlah',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('Persentase', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text('Persentase',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -482,37 +494,46 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                   _buildPdfTableRow('Sakit', laporan.sakit, total),
                   _buildPdfTableRow('Alfa', laporan.alfa, total),
                   pw.TableRow(
-                    decoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                    decoration:
+                        const pw.BoxDecoration(color: PdfColors.grey200),
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('TOTAL', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text('TOTAL',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('$total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text('$total',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text('100%', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text('100%',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       ),
                     ],
                   ),
                 ],
               ),
-              
+
               pw.SizedBox(height: 20),
-              pw.Text('Tingkat Kehadiran: ${persentaseHadir.toStringAsFixed(1)}%'),
-              
+              pw.Text(
+                  'Tingkat Kehadiran: ${persentaseHadir.toStringAsFixed(1)}%'),
+
               pw.SizedBox(height: 40),
-              
+
               // Footer
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.end,
                 children: [
                   pw.Column(
                     children: [
-                      pw.Text('Kemutung Kidul, ${DateFormat('dd MMMM yyyy', 'id').format(DateTime.now())}'),
+                      pw.Text(
+                          'Kemutug Kidul, ${DateFormat('dd MMMM yyyy', 'id').format(DateTime.now())}'),
                       pw.SizedBox(height: 5),
                       pw.Text('Wali Kelas'),
                       pw.SizedBox(height: 50),
@@ -530,7 +551,8 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
     // Print atau simpan PDF
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
-      name: 'Laporan_Kehadiran_${laporan.tahunAjar?.replaceAll('/', '-')}_${laporan.semester.replaceAll(' ', '_')}.pdf',
+      name:
+          'Laporan_Kehadiran_${laporan.tahunAjar?.replaceAll('/', '-')}_${laporan.semester.replaceAll(' ', '_')}.pdf',
     );
   }
 
@@ -557,76 +579,109 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
   Future<void> _generateAndSaveExcel(Laporan laporan) async {
     final excel = xl.Excel.createExcel();
     final sheet = excel['Laporan Kehadiran'];
-    
+
     // Header
-    sheet.cell(xl.CellIndex.indexByString('A1')).value = xl.TextCellValue('LAPORAN KEHADIRAN SISWA');
-    sheet.cell(xl.CellIndex.indexByString('A2')).value = xl.TextCellValue('SD Negeri Kemutung Kidul');
-    
+    sheet.cell(xl.CellIndex.indexByString('A1')).value =
+        xl.TextCellValue('LAPORAN KEHADIRAN SISWA');
+    sheet.cell(xl.CellIndex.indexByString('A2')).value =
+        xl.TextCellValue('SD Negeri Kemutug Kidul');
+
     // Info
-    sheet.cell(xl.CellIndex.indexByString('A4')).value = xl.TextCellValue('Kelas');
-    sheet.cell(xl.CellIndex.indexByString('B4')).value = xl.TextCellValue(_selectedKelas?.kelas ?? '-');
-    
-    sheet.cell(xl.CellIndex.indexByString('A5')).value = xl.TextCellValue('Tahun Ajaran');
-    sheet.cell(xl.CellIndex.indexByString('B5')).value = xl.TextCellValue(laporan.tahunAjar ?? '-');
-    
-    sheet.cell(xl.CellIndex.indexByString('A6')).value = xl.TextCellValue('Semester');
-    sheet.cell(xl.CellIndex.indexByString('B6')).value = xl.TextCellValue(laporan.semester);
-    
-    sheet.cell(xl.CellIndex.indexByString('A7')).value = xl.TextCellValue('Periode');
-    sheet.cell(xl.CellIndex.indexByString('B7')).value = xl.TextCellValue('${laporan.periodeAwal} s/d ${laporan.periodeAkhir}');
-    
+    sheet.cell(xl.CellIndex.indexByString('A4')).value =
+        xl.TextCellValue('Kelas');
+    sheet.cell(xl.CellIndex.indexByString('B4')).value =
+        xl.TextCellValue(_selectedKelas?.kelas ?? '-');
+
+    sheet.cell(xl.CellIndex.indexByString('A5')).value =
+        xl.TextCellValue('Tahun Ajaran');
+    sheet.cell(xl.CellIndex.indexByString('B5')).value =
+        xl.TextCellValue(laporan.tahunAjar ?? '-');
+
+    sheet.cell(xl.CellIndex.indexByString('A6')).value =
+        xl.TextCellValue('Semester');
+    sheet.cell(xl.CellIndex.indexByString('B6')).value =
+        xl.TextCellValue(laporan.semester);
+
+    sheet.cell(xl.CellIndex.indexByString('A7')).value =
+        xl.TextCellValue('Periode');
+    sheet.cell(xl.CellIndex.indexByString('B7')).value =
+        xl.TextCellValue('${laporan.periodeAwal} s/d ${laporan.periodeAkhir}');
+
     // Table Header
-    sheet.cell(xl.CellIndex.indexByString('A9')).value = xl.TextCellValue('Status');
-    sheet.cell(xl.CellIndex.indexByString('B9')).value = xl.TextCellValue('Jumlah');
-    sheet.cell(xl.CellIndex.indexByString('C9')).value = xl.TextCellValue('Persentase');
-    
+    sheet.cell(xl.CellIndex.indexByString('A9')).value =
+        xl.TextCellValue('Status');
+    sheet.cell(xl.CellIndex.indexByString('B9')).value =
+        xl.TextCellValue('Jumlah');
+    sheet.cell(xl.CellIndex.indexByString('C9')).value =
+        xl.TextCellValue('Persentase');
+
     final total = laporan.hadir + laporan.izin + laporan.sakit + laporan.alfa;
-    
+
     // Data rows
-    sheet.cell(xl.CellIndex.indexByString('A10')).value = xl.TextCellValue('Hadir');
-    sheet.cell(xl.CellIndex.indexByString('B10')).value = xl.IntCellValue(laporan.hadir);
-    sheet.cell(xl.CellIndex.indexByString('C10')).value = xl.TextCellValue('${total > 0 ? (laporan.hadir / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A11')).value = xl.TextCellValue('Izin');
-    sheet.cell(xl.CellIndex.indexByString('B11')).value = xl.IntCellValue(laporan.izin);
-    sheet.cell(xl.CellIndex.indexByString('C11')).value = xl.TextCellValue('${total > 0 ? (laporan.izin / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A12')).value = xl.TextCellValue('Sakit');
-    sheet.cell(xl.CellIndex.indexByString('B12')).value = xl.IntCellValue(laporan.sakit);
-    sheet.cell(xl.CellIndex.indexByString('C12')).value = xl.TextCellValue('${total > 0 ? (laporan.sakit / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A13')).value = xl.TextCellValue('Alfa');
-    sheet.cell(xl.CellIndex.indexByString('B13')).value = xl.IntCellValue(laporan.alfa);
-    sheet.cell(xl.CellIndex.indexByString('C13')).value = xl.TextCellValue('${total > 0 ? (laporan.alfa / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A14')).value = xl.TextCellValue('TOTAL');
-    sheet.cell(xl.CellIndex.indexByString('B14')).value = xl.IntCellValue(total);
-    sheet.cell(xl.CellIndex.indexByString('C14')).value = xl.TextCellValue('100%');
-    
+    sheet.cell(xl.CellIndex.indexByString('A10')).value =
+        xl.TextCellValue('Hadir');
+    sheet.cell(xl.CellIndex.indexByString('B10')).value =
+        xl.IntCellValue(laporan.hadir);
+    sheet.cell(xl.CellIndex.indexByString('C10')).value = xl.TextCellValue(
+        '${total > 0 ? (laporan.hadir / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A11')).value =
+        xl.TextCellValue('Izin');
+    sheet.cell(xl.CellIndex.indexByString('B11')).value =
+        xl.IntCellValue(laporan.izin);
+    sheet.cell(xl.CellIndex.indexByString('C11')).value = xl.TextCellValue(
+        '${total > 0 ? (laporan.izin / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A12')).value =
+        xl.TextCellValue('Sakit');
+    sheet.cell(xl.CellIndex.indexByString('B12')).value =
+        xl.IntCellValue(laporan.sakit);
+    sheet.cell(xl.CellIndex.indexByString('C12')).value = xl.TextCellValue(
+        '${total > 0 ? (laporan.sakit / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A13')).value =
+        xl.TextCellValue('Alfa');
+    sheet.cell(xl.CellIndex.indexByString('B13')).value =
+        xl.IntCellValue(laporan.alfa);
+    sheet.cell(xl.CellIndex.indexByString('C13')).value = xl.TextCellValue(
+        '${total > 0 ? (laporan.alfa / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A14')).value =
+        xl.TextCellValue('TOTAL');
+    sheet.cell(xl.CellIndex.indexByString('B14')).value =
+        xl.IntCellValue(total);
+    sheet.cell(xl.CellIndex.indexByString('C14')).value =
+        xl.TextCellValue('100%');
+
     // Remove default sheet
     excel.delete('Sheet1');
-    
-    // Save file to cache directory (accessible for sharing)
-    final directory = await getTemporaryDirectory();
-    final fileName = 'Laporan_Kehadiran_${laporan.tahunAjar?.replaceAll('/', '-')}_${laporan.semester.replaceAll(' ', '_')}.xlsx';
-    final filePath = '${directory.path}/$fileName';
-    
+
+    final fileName =
+        'Laporan_Kehadiran_${laporan.tahunAjar?.replaceAll('/', '-')}_${laporan.semester.replaceAll(' ', '_')}.xlsx';
+
     final fileBytes = excel.save();
     if (fileBytes != null) {
-      final file = File(filePath);
-      await file.writeAsBytes(fileBytes);
-      
-      // Use share to open the file with external apps
-      await Share.shareXFiles(
-        [XFile(filePath)],
-        subject: 'Laporan Kehadiran ${laporan.tahunAjar}',
-      );
+      if (kIsWeb) {
+        await downloadFileWeb(fileBytes, fileName);
+      } else {
+        final directory = await getTemporaryDirectory();
+        final filePath = '${directory.path}/$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(fileBytes);
+
+        // Use share to open the file with external apps
+        await Share.shareXFiles(
+          [XFile(filePath)],
+          subject: 'Laporan Kehadiran ${laporan.tahunAjar}',
+        );
+      }
     }
   }
 
   void _showCreateDialog() {
-    _tahunAjarController.text = '${DateTime.now().year}/${DateTime.now().year + 1}';
-    
+    _tahunAjarController.text =
+        '${DateTime.now().year}/${DateTime.now().year + 1}';
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -664,7 +719,6 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  
                   CustomTextField(
                     controller: _tahunAjarController,
                     label: 'Tahun Ajaran',
@@ -672,7 +726,6 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                     prefixIcon: Icons.calendar_today,
                   ),
                   const SizedBox(height: 16),
-                  
                   CustomDropdown<String>(
                     label: 'Semester',
                     value: _selectedSemester,
@@ -686,7 +739,6 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  
                   if (_selectedKelas != null)
                     Container(
                       padding: const EdgeInsets.all(16),
@@ -708,7 +760,6 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                       ),
                     ),
                   const SizedBox(height: 16),
-                  
                   const Text(
                     'Catatan: Laporan akan dibuat sebagai draft. Anda dapat submit setelah memverifikasi data.',
                     style: TextStyle(
@@ -717,7 +768,6 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
                   CustomButton(
                     text: 'Buat Laporan',
                     onPressed: _submitLaporan,
@@ -747,7 +797,8 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
               );
             },
             icon: const Icon(Icons.calendar_month, color: Colors.white),
-            label: const Text('Rekap Bulanan', style: TextStyle(color: Colors.white)),
+            label: const Text('Rekap Bulanan',
+                style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -823,21 +874,22 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
         onPressed: _showCreateDialog,
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Buat Laporan', style: TextStyle(color: Colors.white)),
+        label:
+            const Text('Buat Laporan', style: TextStyle(color: Colors.white)),
       ),
     );
   }
 
   Widget _buildLaporanCard(Laporan laporan) {
     final isSubmitted = laporan.isSubmitted;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: isSubmitted 
+        border: isSubmitted
             ? Border.all(color: AppColors.success.withOpacity(0.5), width: 2)
             : null,
         boxShadow: [
@@ -856,7 +908,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isSubmitted 
+                  color: isSubmitted
                       ? AppColors.success.withOpacity(0.1)
                       : AppColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -884,9 +936,10 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                         ),
                         // Status Badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: isSubmitted 
+                            color: isSubmitted
                                 ? AppColors.success.withOpacity(0.1)
                                 : AppColors.warning.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
@@ -896,7 +949,9 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: isSubmitted ? AppColors.success : AppColors.warning,
+                              color: isSubmitted
+                                  ? AppColors.success
+                                  : AppColors.warning,
                             ),
                           ),
                         ),
@@ -926,7 +981,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
           const SizedBox(height: 12),
           const Divider(),
           const SizedBox(height: 8),
-          
+
           // Stats
           Row(
             children: [
@@ -960,11 +1015,11 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 12),
           const Divider(),
           const SizedBox(height: 8),
-          
+
           // Action Buttons Row 1
           Row(
             children: [
@@ -981,7 +1036,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                 ),
               ),
               const SizedBox(width: 8),
-              
+
               // Download Button
               Expanded(
                 child: OutlinedButton.icon(
@@ -995,19 +1050,20 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                 ),
               ),
               const SizedBox(width: 8),
-              
+
               // Refresh Button (only for drafts)
               if (!isSubmitted)
                 IconButton(
-                  onPressed: _isSubmitting ? null : () => _refreshLaporanData(laporan),
+                  onPressed:
+                      _isSubmitting ? null : () => _refreshLaporanData(laporan),
                   icon: const Icon(Icons.refresh, color: AppColors.primary),
                   tooltip: 'Refresh Data',
                 ),
             ],
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Action Buttons Row 2
           Row(
             children: [
@@ -1015,7 +1071,9 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
               Expanded(
                 child: isSubmitted
                     ? OutlinedButton.icon(
-                        onPressed: _isSubmitting ? null : () => _unsubmitLaporan(laporan),
+                        onPressed: _isSubmitting
+                            ? null
+                            : () => _unsubmitLaporan(laporan),
                         icon: const Icon(Icons.undo, size: 18),
                         label: const Text('Batal Submit'),
                         style: OutlinedButton.styleFrom(
@@ -1024,22 +1082,27 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                         ),
                       )
                     : ElevatedButton.icon(
-                        onPressed: _isSubmitting ? null : () => _submitLaporanToServer(laporan),
-                        icon: const Icon(Icons.send, size: 18, color: Colors.white),
-                        label: const Text('Submit', style: TextStyle(color: Colors.white)),
+                        onPressed: _isSubmitting
+                            ? null
+                            : () => _submitLaporanToServer(laporan),
+                        icon: const Icon(Icons.send,
+                            size: 18, color: Colors.white),
+                        label: const Text('Submit',
+                            style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.success,
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
                       ),
               ),
-              
+
               // Delete Button (only for drafts)
               if (!isSubmitted) ...[
                 const SizedBox(width: 8),
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: _isSubmitting ? null : () => _deleteLaporan(laporan),
+                    onPressed:
+                        _isSubmitting ? null : () => _deleteLaporan(laporan),
                     icon: const Icon(Icons.delete_outline, size: 18),
                     label: const Text('Hapus'),
                     style: OutlinedButton.styleFrom(
@@ -1088,9 +1151,13 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
   }
 
   void _showLaporanDetail(Laporan laporan) {
-    final total = (laporan.hadir ?? 0) + (laporan.izin ?? 0) + (laporan.sakit ?? 0) + (laporan.alfa ?? 0);
-    final persentaseHadir = total > 0 ? ((laporan.hadir ?? 0) / total * 100) : 0.0;
-    
+    final total = (laporan.hadir ?? 0) +
+        (laporan.izin ?? 0) +
+        (laporan.sakit ?? 0) +
+        (laporan.alfa ?? 0);
+    final persentaseHadir =
+        total > 0 ? ((laporan.hadir ?? 0) / total * 100) : 0.0;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1119,7 +1186,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Header
               Row(
                 children: [
@@ -1129,7 +1196,8 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                       color: AppColors.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Icon(Icons.description, color: AppColors.primary, size: 32),
+                    child: const Icon(Icons.description,
+                        color: AppColors.primary, size: 32),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -1155,7 +1223,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Summary Card
               Container(
                 padding: const EdgeInsets.all(16),
@@ -1187,7 +1255,7 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Stats Grid
               const Text(
                 'Statistik Kehadiran',
@@ -1200,11 +1268,13 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
               Row(
                 children: [
                   Expanded(
-                    child: _buildDetailStat('Hadir', '${laporan.hadir ?? 0}', AppColors.statusHadir),
+                    child: _buildDetailStat('Hadir', '${laporan.hadir ?? 0}',
+                        AppColors.statusHadir),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: _buildDetailStat('Izin', '${laporan.izin ?? 0}', AppColors.statusIzin),
+                    child: _buildDetailStat(
+                        'Izin', '${laporan.izin ?? 0}', AppColors.statusIzin),
                   ),
                 ],
               ),
@@ -1212,16 +1282,18 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
               Row(
                 children: [
                   Expanded(
-                    child: _buildDetailStat('Sakit', '${laporan.sakit ?? 0}', AppColors.statusSakit),
+                    child: _buildDetailStat('Sakit', '${laporan.sakit ?? 0}',
+                        AppColors.statusSakit),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: _buildDetailStat('Alfa', '${laporan.alfa ?? 0}', AppColors.statusAlfa),
+                    child: _buildDetailStat(
+                        'Alfa', '${laporan.alfa ?? 0}', AppColors.statusAlfa),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Info
               const Text(
                 'Informasi',
@@ -1235,9 +1307,9 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
               _buildInfoRow('Kelas', _selectedKelas?.kelas ?? '-'),
               // if (laporan.periodeAwal != null)
               //   _buildInfoRow('Periode', '${laporan.periodeAwal} - ${laporan.periodeAkhir}'),
-              
+
               const SizedBox(height: 24),
-              
+
               // Close Button
               SizedBox(
                 width: double.infinity,
@@ -1250,7 +1322,8 @@ class _LaporanGuruPageState extends State<LaporanGuruPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Tutup', style: TextStyle(color: Colors.white)),
+                  child: const Text('Tutup',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],

@@ -186,7 +186,7 @@ class DashboardController extends Controller
             'success' => true,
             'message' => 'Dashboard kepala sekolah berhasil diambil',
             'data' => [
-                'nama_sekolah' => 'SD Negeri Kemutung Kidul',
+                'nama_sekolah' => 'SD Negeri Kemutug Kidul',
                 'total_kelas' => $totalKelas,
                 'total_guru' => $totalGuru,
                 'total_siswa' => $totalSiswa,

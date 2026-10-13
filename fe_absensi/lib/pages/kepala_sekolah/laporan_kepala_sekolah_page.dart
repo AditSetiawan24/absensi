@@ -13,6 +13,8 @@ import '../../models/siswa_model.dart';
 import '../../services/laporan_service.dart';
 import '../../services/data_service.dart';
 import '../../widgets/common_widgets.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import '../../utils/download/download_helper.dart';
 
 class LaporanKepalaSekolahPage extends StatefulWidget {
   const LaporanKepalaSekolahPage({super.key});
@@ -150,9 +152,17 @@ class _LaporanKepalaSekolahPageState extends State<LaporanKepalaSekolahPage> {
         ),
       );
 
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/laporan_${laporan.idLaporan}.pdf');
-      await file.writeAsBytes(await pdf.save());
+      final bytes = await pdf.save();
+      String? savedPath;
+
+      if (kIsWeb) {
+        await downloadFileWeb(bytes, 'laporan_${laporan.idLaporan}.pdf');
+      } else {
+        final directory = await getApplicationDocumentsDirectory();
+        final file = File('${directory.path}/laporan_${laporan.idLaporan}.pdf');
+        await file.writeAsBytes(bytes);
+        savedPath = file.path;
+      }
 
       setState(() {
         _isDownloading = false;
@@ -161,12 +171,12 @@ class _LaporanKepalaSekolahPageState extends State<LaporanKepalaSekolahPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('PDF disimpan: ${file.path}'),
+            content: Text(kIsWeb ? 'PDF berhasil diunduh' : 'PDF disimpan: $savedPath'),
             backgroundColor: AppColors.success,
-            action: SnackBarAction(
+            action: kIsWeb ? null : SnackBarAction(
               label: 'Buka',
               textColor: Colors.white,
-              onPressed: () => OpenFilex.open(file.path),
+              onPressed: () => OpenFilex.open(savedPath!),
             ),
           ),
         );
@@ -254,9 +264,17 @@ class _LaporanKepalaSekolahPageState extends State<LaporanKepalaSekolahPage> {
         xl.IntCellValue(laporan.alfa),
       ]);
 
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/laporan_${laporan.idLaporan}.xlsx');
-      await file.writeAsBytes(excel.encode()!);
+      final bytes = excel.encode()!;
+      String? savedPath;
+
+      if (kIsWeb) {
+        await downloadFileWeb(bytes, 'laporan_${laporan.idLaporan}.xlsx');
+      } else {
+        final directory = await getApplicationDocumentsDirectory();
+        final file = File('${directory.path}/laporan_${laporan.idLaporan}.xlsx');
+        await file.writeAsBytes(bytes);
+        savedPath = file.path;
+      }
 
       setState(() {
         _isDownloading = false;
@@ -265,12 +283,12 @@ class _LaporanKepalaSekolahPageState extends State<LaporanKepalaSekolahPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Excel disimpan: ${file.path}'),
+            content: Text(kIsWeb ? 'Excel berhasil diunduh' : 'Excel disimpan: $savedPath'),
             backgroundColor: AppColors.success,
-            action: SnackBarAction(
+            action: kIsWeb ? null : SnackBarAction(
               label: 'Buka',
               textColor: Colors.white,
-              onPressed: () => OpenFilex.open(file.path),
+              onPressed: () => OpenFilex.open(savedPath!),
             ),
           ),
         );

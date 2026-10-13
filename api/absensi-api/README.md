@@ -1,6 +1,6 @@
-# Absensi API - SD Negeri Kemutung Kidul
+# Absensi API - SD Negeri Kemutug Kidul
 
-REST API untuk aplikasi absensi siswa SD Negeri Kemutung Kidul. Dibangun menggunakan Laravel 10.
+REST API untuk aplikasi absensi siswa SD Negeri Kemutug Kidul. Dibangun menggunakan Laravel 10.
 
 ## Fitur
 

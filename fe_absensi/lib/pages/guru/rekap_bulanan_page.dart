@@ -15,7 +15,8 @@ import '../../models/siswa_model.dart';
 import '../../services/rekap_bulanan_service.dart';
 import '../../services/data_service.dart';
 import '../../widgets/common_widgets.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
+import '../../utils/download/download_helper.dart';
 class RekapBulananPage extends StatefulWidget {
   const RekapBulananPage({super.key});
 
@@ -35,8 +36,18 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
   int _selectedTahun = DateTime.now().year;
 
   final List<String> _namaBulan = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
   ];
 
   @override
@@ -48,7 +59,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
   Future<void> _loadKelas() async {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final nip = auth.user?.nip ?? '';
-    
+
     final response = await KelasService.getByGuru(nip);
 
     if (response.success && response.data != null) {
@@ -99,7 +110,8 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Hapus Rekap'),
-        content: Text('Yakin ingin menghapus rekap ${rekap.namaBulan} ${rekap.tahun}?'),
+        content: Text(
+            'Yakin ingin menghapus rekap ${rekap.namaBulan} ${rekap.tahun}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -118,12 +130,16 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
       final response = await RekapBulananService.delete(rekap.idLaporan!);
       if (response.success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Rekap berhasil dihapus'), backgroundColor: AppColors.success),
+          const SnackBar(
+              content: Text('Rekap berhasil dihapus'),
+              backgroundColor: AppColors.success),
         );
         _loadRekap();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message ?? 'Gagal menghapus rekap'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text(response.message ?? 'Gagal menghapus rekap'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -134,7 +150,8 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Submit Rekap'),
-        content: Text('Submit rekap ${rekap.namaBulan} ${rekap.tahun}?\nRekap yang sudah disubmit tidak dapat diedit.'),
+        content: Text(
+            'Submit rekap ${rekap.namaBulan} ${rekap.tahun}?\nRekap yang sudah disubmit tidak dapat diedit.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -152,12 +169,16 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
       final response = await RekapBulananService.submit(rekap.idLaporan!);
       if (response.success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Rekap berhasil disubmit'), backgroundColor: AppColors.success),
+          const SnackBar(
+              content: Text('Rekap berhasil disubmit'),
+              backgroundColor: AppColors.success),
         );
         _loadRekap();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message ?? 'Gagal submit rekap'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text(response.message ?? 'Gagal submit rekap'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -168,7 +189,8 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Batal Submit'),
-        content: Text('Batalkan submit rekap ${rekap.namaBulan} ${rekap.tahun}?'),
+        content:
+            Text('Batalkan submit rekap ${rekap.namaBulan} ${rekap.tahun}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -187,12 +209,16 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
       final response = await RekapBulananService.unsubmit(rekap.idLaporan!);
       if (response.success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Submit rekap berhasil dibatalkan'), backgroundColor: AppColors.success),
+          const SnackBar(
+              content: Text('Submit rekap berhasil dibatalkan'),
+              backgroundColor: AppColors.success),
         );
         _loadRekap();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message ?? 'Gagal membatalkan submit'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text(response.message ?? 'Gagal membatalkan submit'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -200,16 +226,20 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
 
   Future<void> _refreshRekapData(Laporan rekap) async {
     if (rekap.idLaporan == null) return;
-    
+
     final response = await RekapBulananService.refresh(rekap.idLaporan!);
     if (response.success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response.message ?? 'Data rekap berhasil di-refresh'), backgroundColor: AppColors.success),
+        SnackBar(
+            content: Text(response.message ?? 'Data rekap berhasil di-refresh'),
+            backgroundColor: AppColors.success),
       );
       _loadRekap();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response.message ?? 'Gagal refresh data'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text(response.message ?? 'Gagal refresh data'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -240,7 +270,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
-                  
+
                   // Bulan Dropdown
                   DropdownButtonFormField<int>(
                     value: _selectedBulan,
@@ -259,7 +289,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Tahun Dropdown
                   DropdownButtonFormField<int>(
                     value: _selectedTahun,
@@ -279,7 +309,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -288,7 +318,8 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                         backgroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      child: const Text('Buat Rekap', style: TextStyle(color: Colors.white)),
+                      child: const Text('Buat Rekap',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ],
@@ -302,7 +333,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
 
   Future<void> _createRekap(BuildContext dialogContext) async {
     if (_selectedKelas == null) return;
-    
+
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final nip = auth.user?.nip ?? '';
 
@@ -319,13 +350,17 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
 
     if (response.success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response.message ?? 'Rekap berhasil dibuat'), backgroundColor: AppColors.success),
+        SnackBar(
+            content: Text(response.message ?? 'Rekap berhasil dibuat'),
+            backgroundColor: AppColors.success),
       );
       _loadRekap();
     } else {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response.message ?? 'Gagal membuat rekap'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text(response.message ?? 'Gagal membuat rekap'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -347,7 +382,8 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
             ),
             const SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.picture_as_pdf, color: Colors.red, size: 32),
+              leading:
+                  const Icon(Icons.picture_as_pdf, color: Colors.red, size: 32),
               title: const Text('Download PDF'),
               subtitle: const Text('Untuk dicetak atau dikirim'),
               onTap: () {
@@ -356,7 +392,8 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.table_chart, color: Colors.green, size: 32),
+              leading:
+                  const Icon(Icons.table_chart, color: Colors.green, size: 32),
               title: const Text('Download Excel'),
               subtitle: const Text('Untuk diolah lebih lanjut'),
               onTap: () {
@@ -372,9 +409,9 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
 
   Future<void> _generateAndPrintPdf(Laporan rekap) async {
     final pdf = pw.Document();
-    
+
     final total = rekap.hadir + rekap.izin + rekap.sakit + rekap.alfa;
-    
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -385,9 +422,12 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
               pw.Center(
                 child: pw.Column(
                   children: [
-                    pw.Text('REKAP KEHADIRAN BULANAN', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('REKAP KEHADIRAN BULANAN',
+                        style: pw.TextStyle(
+                            fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(height: 4),
-                    pw.Text('SD Negeri Kemutung Kidul', style: const pw.TextStyle(fontSize: 14)),
+                    pw.Text('SD Negeri Kemutug Kidul',
+                        style: const pw.TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -396,21 +436,35 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                 border: pw.TableBorder.all(),
                 children: [
                   pw.TableRow(children: [
-                    pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Kelas')),
-                    pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(_selectedKelas?.kelas ?? '-')),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('Kelas')),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(_selectedKelas?.kelas ?? '-')),
                   ]),
                   pw.TableRow(children: [
-                    pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Bulan')),
-                    pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('${rekap.namaBulan} ${rekap.tahun}')),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('Bulan')),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('${rekap.namaBulan} ${rekap.tahun}')),
                   ]),
                   pw.TableRow(children: [
-                    pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Periode')),
-                    pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('${rekap.periodeAwal} s/d ${rekap.periodeAkhir}')),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('Periode')),
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(
+                            '${rekap.periodeAwal} s/d ${rekap.periodeAkhir}')),
                   ]),
                 ],
               ),
               pw.SizedBox(height: 20),
-              pw.Text('Rekap Kehadiran:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Text('Rekap Kehadiran:',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(),
@@ -421,11 +475,24 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                 },
                 children: [
                   pw.TableRow(
-                    decoration: const pw.BoxDecoration(color: PdfColors.grey300),
+                    decoration:
+                        const pw.BoxDecoration(color: PdfColors.grey300),
                     children: [
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Status', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('Jumlah', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('%', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(
+                          padding: const pw.EdgeInsets.all(8),
+                          child: pw.Text('Status',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(
+                          padding: const pw.EdgeInsets.all(8),
+                          child: pw.Text('Jumlah',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(
+                          padding: const pw.EdgeInsets.all(8),
+                          child: pw.Text('%',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold))),
                     ],
                   ),
                   _buildPdfTableRow('Hadir', rekap.hadir, total),
@@ -433,11 +500,24 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                   _buildPdfTableRow('Sakit', rekap.sakit, total),
                   _buildPdfTableRow('Alfa', rekap.alfa, total),
                   pw.TableRow(
-                    decoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                    decoration:
+                        const pw.BoxDecoration(color: PdfColors.grey200),
                     children: [
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('TOTAL', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('$total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('100%', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(
+                          padding: const pw.EdgeInsets.all(8),
+                          child: pw.Text('TOTAL',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(
+                          padding: const pw.EdgeInsets.all(8),
+                          child: pw.Text('$total',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(
+                          padding: const pw.EdgeInsets.all(8),
+                          child: pw.Text('100%',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold))),
                     ],
                   ),
                 ],
@@ -456,8 +536,11 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
     return pw.TableRow(
       children: [
         pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(label)),
-        pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('$value')),
-        pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('${percentage.toStringAsFixed(1)}%')),
+        pw.Padding(
+            padding: const pw.EdgeInsets.all(8), child: pw.Text('$value')),
+        pw.Padding(
+            padding: const pw.EdgeInsets.all(8),
+            child: pw.Text('${percentage.toStringAsFixed(1)}%')),
       ],
     );
   }
@@ -465,60 +548,90 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
   Future<void> _generateAndSaveExcel(Laporan rekap) async {
     final excel = xl.Excel.createExcel();
     final sheet = excel['Rekap Bulanan'];
-    
-    sheet.cell(xl.CellIndex.indexByString('A1')).value = xl.TextCellValue('REKAP KEHADIRAN BULANAN');
-    sheet.cell(xl.CellIndex.indexByString('A2')).value = xl.TextCellValue('SD Negeri Kemutung Kidul');
-    
-    sheet.cell(xl.CellIndex.indexByString('A4')).value = xl.TextCellValue('Kelas');
-    sheet.cell(xl.CellIndex.indexByString('B4')).value = xl.TextCellValue(_selectedKelas?.kelas ?? '-');
-    
-    sheet.cell(xl.CellIndex.indexByString('A5')).value = xl.TextCellValue('Bulan');
-    sheet.cell(xl.CellIndex.indexByString('B5')).value = xl.TextCellValue('${rekap.namaBulan} ${rekap.tahun}');
-    
-    sheet.cell(xl.CellIndex.indexByString('A6')).value = xl.TextCellValue('Periode');
-    sheet.cell(xl.CellIndex.indexByString('B6')).value = xl.TextCellValue('${rekap.periodeAwal} s/d ${rekap.periodeAkhir}');
-    
-    sheet.cell(xl.CellIndex.indexByString('A8')).value = xl.TextCellValue('Status');
-    sheet.cell(xl.CellIndex.indexByString('B8')).value = xl.TextCellValue('Jumlah');
-    sheet.cell(xl.CellIndex.indexByString('C8')).value = xl.TextCellValue('Persentase');
-    
+
+    sheet.cell(xl.CellIndex.indexByString('A1')).value =
+        xl.TextCellValue('REKAP KEHADIRAN BULANAN');
+    sheet.cell(xl.CellIndex.indexByString('A2')).value =
+        xl.TextCellValue('SD Negeri Kemutug Kidul');
+
+    sheet.cell(xl.CellIndex.indexByString('A4')).value =
+        xl.TextCellValue('Kelas');
+    sheet.cell(xl.CellIndex.indexByString('B4')).value =
+        xl.TextCellValue(_selectedKelas?.kelas ?? '-');
+
+    sheet.cell(xl.CellIndex.indexByString('A5')).value =
+        xl.TextCellValue('Bulan');
+    sheet.cell(xl.CellIndex.indexByString('B5')).value =
+        xl.TextCellValue('${rekap.namaBulan} ${rekap.tahun}');
+
+    sheet.cell(xl.CellIndex.indexByString('A6')).value =
+        xl.TextCellValue('Periode');
+    sheet.cell(xl.CellIndex.indexByString('B6')).value =
+        xl.TextCellValue('${rekap.periodeAwal} s/d ${rekap.periodeAkhir}');
+
+    sheet.cell(xl.CellIndex.indexByString('A8')).value =
+        xl.TextCellValue('Status');
+    sheet.cell(xl.CellIndex.indexByString('B8')).value =
+        xl.TextCellValue('Jumlah');
+    sheet.cell(xl.CellIndex.indexByString('C8')).value =
+        xl.TextCellValue('Persentase');
+
     final total = rekap.hadir + rekap.izin + rekap.sakit + rekap.alfa;
-    
-    sheet.cell(xl.CellIndex.indexByString('A9')).value = xl.TextCellValue('Hadir');
-    sheet.cell(xl.CellIndex.indexByString('B9')).value = xl.IntCellValue(rekap.hadir);
-    sheet.cell(xl.CellIndex.indexByString('C9')).value = xl.TextCellValue('${total > 0 ? (rekap.hadir / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A10')).value = xl.TextCellValue('Izin');
-    sheet.cell(xl.CellIndex.indexByString('B10')).value = xl.IntCellValue(rekap.izin);
-    sheet.cell(xl.CellIndex.indexByString('C10')).value = xl.TextCellValue('${total > 0 ? (rekap.izin / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A11')).value = xl.TextCellValue('Sakit');
-    sheet.cell(xl.CellIndex.indexByString('B11')).value = xl.IntCellValue(rekap.sakit);
-    sheet.cell(xl.CellIndex.indexByString('C11')).value = xl.TextCellValue('${total > 0 ? (rekap.sakit / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A12')).value = xl.TextCellValue('Alfa');
-    sheet.cell(xl.CellIndex.indexByString('B12')).value = xl.IntCellValue(rekap.alfa);
-    sheet.cell(xl.CellIndex.indexByString('C12')).value = xl.TextCellValue('${total > 0 ? (rekap.alfa / total * 100).toStringAsFixed(1) : 0}%');
-    
-    sheet.cell(xl.CellIndex.indexByString('A13')).value = xl.TextCellValue('TOTAL');
-    sheet.cell(xl.CellIndex.indexByString('B13')).value = xl.IntCellValue(total);
-    sheet.cell(xl.CellIndex.indexByString('C13')).value = xl.TextCellValue('100%');
-    
+
+    sheet.cell(xl.CellIndex.indexByString('A9')).value =
+        xl.TextCellValue('Hadir');
+    sheet.cell(xl.CellIndex.indexByString('B9')).value =
+        xl.IntCellValue(rekap.hadir);
+    sheet.cell(xl.CellIndex.indexByString('C9')).value = xl.TextCellValue(
+        '${total > 0 ? (rekap.hadir / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A10')).value =
+        xl.TextCellValue('Izin');
+    sheet.cell(xl.CellIndex.indexByString('B10')).value =
+        xl.IntCellValue(rekap.izin);
+    sheet.cell(xl.CellIndex.indexByString('C10')).value = xl.TextCellValue(
+        '${total > 0 ? (rekap.izin / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A11')).value =
+        xl.TextCellValue('Sakit');
+    sheet.cell(xl.CellIndex.indexByString('B11')).value =
+        xl.IntCellValue(rekap.sakit);
+    sheet.cell(xl.CellIndex.indexByString('C11')).value = xl.TextCellValue(
+        '${total > 0 ? (rekap.sakit / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A12')).value =
+        xl.TextCellValue('Alfa');
+    sheet.cell(xl.CellIndex.indexByString('B12')).value =
+        xl.IntCellValue(rekap.alfa);
+    sheet.cell(xl.CellIndex.indexByString('C12')).value = xl.TextCellValue(
+        '${total > 0 ? (rekap.alfa / total * 100).toStringAsFixed(1) : 0}%');
+
+    sheet.cell(xl.CellIndex.indexByString('A13')).value =
+        xl.TextCellValue('TOTAL');
+    sheet.cell(xl.CellIndex.indexByString('B13')).value =
+        xl.IntCellValue(total);
+    sheet.cell(xl.CellIndex.indexByString('C13')).value =
+        xl.TextCellValue('100%');
+
     excel.delete('Sheet1');
-    
-    final directory = await getTemporaryDirectory();
+
     final fileName = 'Rekap_${rekap.namaBulan}_${rekap.tahun}.xlsx';
-    final filePath = '${directory.path}/$fileName';
-    
+
     final fileBytes = excel.save();
     if (fileBytes != null) {
-      final file = File(filePath);
-      await file.writeAsBytes(fileBytes);
-      
-      await Share.shareXFiles(
-        [XFile(filePath)],
-        subject: 'Rekap Bulanan ${rekap.namaBulan} ${rekap.tahun}',
-      );
+      if (kIsWeb) {
+        await downloadFileWeb(fileBytes, fileName);
+      } else {
+        final directory = await getTemporaryDirectory();
+        final filePath = '${directory.path}/$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(fileBytes);
+
+        await Share.shareXFiles(
+          [XFile(filePath)],
+          subject: 'Rekap Bulanan ${rekap.namaBulan} ${rekap.tahun}',
+        );
+      }
     }
   }
 
@@ -544,13 +657,15 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
               color: Colors.grey[100],
               child: Row(
                 children: [
-                  const Text('Kelas: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text('Kelas: ',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: DropdownButtonFormField<Kelas>(
                       value: _selectedKelas,
                       decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
@@ -569,7 +684,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                 ],
               ),
             ),
-          
+
           // Content
           Expanded(
             child: _isLoading
@@ -579,7 +694,8 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_error!, style: const TextStyle(color: Colors.red)),
+                            Text(_error!,
+                                style: const TextStyle(color: Colors.red)),
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: _loadRekap,
@@ -593,11 +709,13 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.calendar_month, size: 64, color: Colors.grey[400]),
+                                Icon(Icons.calendar_month,
+                                    size: 64, color: Colors.grey[400]),
                                 const SizedBox(height: 16),
                                 Text(
                                   'Belum ada rekap bulanan',
-                                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.grey[600], fontSize: 16),
                                 ),
                                 const SizedBox(height: 8),
                                 const Text('Tap + untuk membuat rekap baru'),
@@ -623,7 +741,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
   Widget _buildRekapCard(Laporan rekap) {
     final total = rekap.hadir + rekap.izin + rekap.sakit + rekap.alfa;
     final persentaseHadir = total > 0 ? (rekap.hadir / total * 100) : 0.0;
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
@@ -639,8 +757,11 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: rekap.isSubmitted ? AppColors.success.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+              color: rekap.isSubmitted
+                  ? AppColors.success.withOpacity(0.1)
+                  : Colors.orange.withOpacity(0.1),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(10)),
             ),
             child: Row(
               children: [
@@ -668,9 +789,11 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: rekap.isSubmitted ? AppColors.success : Colors.orange,
+                    color:
+                        rekap.isSubmitted ? AppColors.success : Colors.orange,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -681,7 +804,7 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
               ],
             ),
           ),
-          
+
           // Stats
           Padding(
             padding: const EdgeInsets.all(12),
@@ -701,7 +824,11 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                   value: persentaseHadir / 100,
                   backgroundColor: Colors.grey[200],
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    persentaseHadir >= 80 ? Colors.green : persentaseHadir >= 60 ? Colors.orange : Colors.red,
+                    persentaseHadir >= 80
+                        ? Colors.green
+                        : persentaseHadir >= 60
+                            ? Colors.orange
+                            : Colors.red,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -712,13 +839,14 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
               ],
             ),
           ),
-          
+
           // Actions
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.grey[50],
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(10)),
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(10)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -735,19 +863,22 @@ class _RekapBulananPageState extends State<RekapBulananPage> {
                     onPressed: () => _deleteRekap(rekap),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.check_circle, size: 20, color: Colors.green),
+                    icon: const Icon(Icons.check_circle,
+                        size: 20, color: Colors.green),
                     tooltip: 'Submit',
                     onPressed: () => _submitRekap(rekap),
                   ),
                 ] else ...[
                   IconButton(
-                    icon: const Icon(Icons.undo, size: 20, color: Colors.orange),
+                    icon:
+                        const Icon(Icons.undo, size: 20, color: Colors.orange),
                     tooltip: 'Batal Submit',
                     onPressed: () => _unsubmitRekap(rekap),
                   ),
                 ],
                 IconButton(
-                  icon: const Icon(Icons.download, size: 20, color: AppColors.primary),
+                  icon: const Icon(Icons.download,
+                      size: 20, color: AppColors.primary),
                   tooltip: 'Download',
                   onPressed: () => _showDownloadOptions(rekap),
                 ),

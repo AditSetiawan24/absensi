@@ -465,7 +465,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Password lama tidak sesuai'
-            ], 401);
+            ], 400);
         }
 
         $user->password = Hash::make($request->password);

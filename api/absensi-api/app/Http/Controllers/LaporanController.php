@@ -332,7 +332,7 @@ class LaporanController extends Controller
             'success' => true,
             'message' => 'Laporan berhasil di-generate',
             'data' => [
-                'nama_sekolah' => 'SD Negeri Kemutung Kidul',
+                'nama_sekolah' => 'SD Negeri Kemutug Kidul',
                 'tahun_ajar' => $tahunAjar . '/' . ($tahunAjar + 1),
                 'semester' => $semester,
                 'periode' => [
@@ -528,7 +528,7 @@ class LaporanController extends Controller
             'message' => 'Data untuk PDF berhasil disiapkan',
             'download_type' => 'pdf',
             'data' => [
-                'nama_sekolah' => 'SD Negeri Kemutung Kidul',
+                'nama_sekolah' => 'SD Negeri Kemutug Kidul',
                 'tahun_ajar' => $tahunAjar . '/' . ($tahunAjar + 1),
                 'semester' => $semester,
                 'periode' => $startDate . ' s/d ' . $endDate,
@@ -591,7 +591,7 @@ class LaporanController extends Controller
             'message' => 'Data untuk Excel berhasil disiapkan',
             'download_type' => 'excel',
             'data' => [
-                'nama_sekolah' => 'SD Negeri Kemutung Kidul',
+                'nama_sekolah' => 'SD Negeri Kemutug Kidul',
                 'tahun_ajar' => $tahunAjar . '/' . ($tahunAjar + 1),
                 'semester' => $semester,
                 'periode' => $startDate . ' s/d ' . $endDate,
